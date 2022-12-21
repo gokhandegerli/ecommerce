@@ -1,0 +1,13 @@
+Customer:
+Customer should be able to sign up
+
+Customer should be able to log in
+
+Customer should be able to addAddress
+
+Customer should be able to create a Cart
+
+Customer should be able to make an order
+
+
+
