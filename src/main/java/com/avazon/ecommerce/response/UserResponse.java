@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 public class UserResponse {
 
-    UserDto user;
+    UserDto user = new UserDto();
     Meta meta = new Meta();
 }

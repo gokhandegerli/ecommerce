@@ -1,6 +1,5 @@
 package com.avazon.ecommerce.model.entity;
 
-import com.avazon.ecommerce.dto.AuthDto;
 import com.avazon.ecommerce.dto.CartDto;
 import com.avazon.ecommerce.dto.UserDto;
 import jakarta.persistence.*;
@@ -111,11 +110,4 @@ public class LocalUser implements Serializable {
         return dto;
     }
 
-    public AuthDto toDtoForAuth() {
-        AuthDto authDto = new AuthDto();
-        authDto.setName(this.getName());
-        authDto.setEmail(this.getEmail());
-        authDto.setPassword(this.getPassword());
-        return authDto;
-    }
 }
