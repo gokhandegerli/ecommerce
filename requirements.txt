@@ -1,13 +1,34 @@
-Customer:
-Customer should be able to sign up
+~Customer~
+Customer should be able to sign up - POST http://localhost:8080/users/register
+Customer should be able to log in - GET http://localhost:8080/users/{{email}}/{{password}}
+Customer should be able to update email, name and password - PUT http://localhost:8080/users/{{userId}}
+Customer should be able to delete account-
 
-Customer should be able to log in
-
-Customer should be able to addAddress
-
-Customer should be able to create a Cart
-
+Customer should be able to add a product to Cart
+Customer should be able to remove a product from Cart
 Customer should be able to make an order
 
+~Address~
+Add an address to customer -
+Get the addresses of a customer -
+Update an address of a customer -
+Remove an address from customer -
 
+
+
+~Cart~
+
+~CartProduct~
+
+~Order~
+
+~OrderProduct~
+
+~Product~
+Add a product -
+Get a product -
+Update a product -
+Delete a product -
+
+~Category~
 

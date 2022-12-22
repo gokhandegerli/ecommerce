@@ -1,9 +1,11 @@
 package com.avazon.ecommerce.service;
 
 import com.avazon.ecommerce.api.model.RegistrationBody;
+import com.avazon.ecommerce.api.model.UserUpdateBody;
 import com.avazon.ecommerce.exception.RegisterFieldsMissingException;
 import com.avazon.ecommerce.exception.LoginFailException;
 import com.avazon.ecommerce.exception.UserAlreadyExistException;
+import com.avazon.ecommerce.exception.UserNotExistException;
 import com.avazon.ecommerce.model.entity.LocalUser;
 import com.avazon.ecommerce.repository.UserRepository;
 import com.avazon.ecommerce.response.UserResponse;
@@ -39,7 +41,7 @@ public class UserService {
         return response;
     }
 
-    public UserResponse loginUser (String email, String password) throws LoginFailException {
+    public UserResponse loginUser(String email, String password) throws LoginFailException {
         Optional<LocalUser> opUser = repository.findByEmailAndPassword(email, password);
         if (opUser.isPresent()) {
             LocalUser user = opUser.get();
@@ -53,5 +55,33 @@ public class UserService {
         }
     }
 
+
+    public UserResponse updateUser(long userId, UserUpdateBody userUpdateBody) throws UserNotExistException{
+
+        Optional<LocalUser> opUser = repository.findById(userId);
+
+        if (opUser.isPresent()) {
+            LocalUser user = opUser.get();
+            UserResponse response = new UserResponse();
+            response.setUser(user.toDto());
+            if (userUpdateBody.getEmail() != null) {
+                user.setEmail(userUpdateBody.getEmail());
+                response.getUser().setEmail(user.getEmail());
+            }
+            if (userUpdateBody.getPassword() != null) {
+                user.setPassword(userUpdateBody.getPassword());
+                response.getUser().setPassword(user.getPassword());
+            }
+            if (userUpdateBody.getName() != null) {
+                user.setName(userUpdateBody.getName());
+                response.getUser().setName(user.getName());
+            }
+            repository.save(user);
+            return response;
+        }
+        else {
+            throw new UserNotExistException("This user does not exist in DB! Please check your data!");
+        }
+    }
 
 }
