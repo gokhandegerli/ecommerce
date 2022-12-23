@@ -1,8 +1,16 @@
 package com.avazon.ecommerce.service;
 
 
+import com.avazon.ecommerce.api.model.AddCartProductToCartBody;
+import com.avazon.ecommerce.api.model.UpdateCartProductInCartBody;
+import com.avazon.ecommerce.model.entity.Cart;
+import com.avazon.ecommerce.model.entity.CartProduct;
+import com.avazon.ecommerce.model.entity.LocalUser;
+import com.avazon.ecommerce.model.entity.Product;
 import com.avazon.ecommerce.repository.CartProductRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class CartProductService {
@@ -10,8 +18,54 @@ public class CartProductService {
 
     private CartProductRepository repository;
 
-    public CartProductService(CartProductRepository cartProductRepository) {
-        this.repository = cartProductRepository;
+    private CartService cartService;
+
+    private ProductService productService;
+
+    private UserService userService;
+
+    public CartProductService(CartProductRepository repository, CartService cartService, ProductService productService, UserService userService) {
+        this.repository = repository;
+        this.cartService = cartService;
+        this.productService = productService;
+        this.userService = userService;
+    }
+
+    public void addCartProductToCart(AddCartProductToCartBody addCartProductToCartBody) {
+
+        CartProduct cartProduct = new CartProduct();
+        Product product = productService.getProductEntity(addCartProductToCartBody.getProductId()).get();
+        product.setQuantity(product.getQuantity()- addCartProductToCartBody.getQuantity());
+        cartProduct.setProduct(product);
+        cartProduct.setQuantity(addCartProductToCartBody.getQuantity());
+        Optional<Cart> cart = cartService.getCartEntityWithUserId(addCartProductToCartBody.getUserId());
+        if (cart.isPresent()) { // halihazırda zaten bir sepet varsa
+            cart.get().getCartProducts().add(cartProduct);
+            cartProduct.setCart(cart.get());
+        } else { // sepete ilk bu ürün ekleniyorsa, sepet de oluşturulup user set ediliyor.
+            Cart newCart = new Cart();
+            newCart.setUser(userService.getUserEntity(addCartProductToCartBody.getUserId()).get());
+            newCart.getCartProducts().add(cartProduct);
+            cartProduct.setCart(newCart);
+        }
+        repository.save(cartProduct);
+    }
+
+    public void updateCartProductInCart (long cartProductId, UpdateCartProductInCartBody updateCartProductInCartBody) {
+
+        CartProduct cartProduct = repository.findById(cartProductId).get();
+        cartProduct.getProduct().
+                setQuantity(cartProduct.getProduct().getQuantity()-(updateCartProductInCartBody.getNewQuantity()-cartProduct.getQuantity()));
+        cartProduct.setQuantity(updateCartProductInCartBody.getNewQuantity());
+        if (cartProduct.getQuantity()==0) {
+            deleteCartProduct(cartProductId);
+        } else {
+            repository.save(cartProduct);
+        }
+    }
+
+    public void deleteCartProduct(long id) {
+        repository.deleteById(id);
     }
 
 }

@@ -14,7 +14,6 @@ public class UserDto {
     String email;
     String password;
     String name;
-    @JsonIgnore
-    CartDto cart;
+
 
 }

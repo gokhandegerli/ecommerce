@@ -10,7 +10,7 @@ import java.util.List;
 
 @Entity
 public class LocalUser implements Serializable {
-    private static final String MAP_CAT = "user";
+    //private static final String MAP_CAT = "user";
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="PRIVATE_SEQ")
@@ -29,19 +29,16 @@ public class LocalUser implements Serializable {
     /*@OneToMany(mappedBy = MAP_CAT, cascade = CascadeType.REMOVE, orphanRemoval = true)
     List<Address> addressList = new ArrayList<>();*/
 
-    @OneToOne(cascade = CascadeType.ALL)
-    private Cart cart;
-
 
     public LocalUser() {
     }
 
-    public LocalUser(long id, String email, String password, String name, Cart cart) {
+    public LocalUser(long id, String email, String password, String name) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.name = name;
-        this.cart = cart;
+
     }
 
     public long getId() {
@@ -76,19 +73,7 @@ public class LocalUser implements Serializable {
         this.name = name;
     }
 
-    public Cart getCart() {
-        return cart;
-    }
 
-    public CartDto getCartDto() {
-        return cart == null
-                ? null
-                : cart.toDto(); //If else'in kısa hali
-    }
-
-    public void setCart(Cart cart) {
-        this.cart = cart;
-    }
 
     public UserDto toDto() {
         UserDto dto = new UserDto();
@@ -96,7 +81,6 @@ public class LocalUser implements Serializable {
         dto.setEmail(this.getEmail());
         dto.setPassword(this.getPassword());
         dto.setName(this.getName());
-        dto.setCart(this.getCartDto());
         return dto;
     }
 

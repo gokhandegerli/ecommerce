@@ -69,4 +69,8 @@ public class ProductService {
         List<ProductDto> productDtoList = productList.stream().map(Product::toDto).toList();
         return productDtoList.stream().map(productDto -> new ProductResponse(productDto)).toList();
     }
+
+    public Optional<Product> getProductEntity(long productId) {
+        return repository.findById(productId);
+    }
 }

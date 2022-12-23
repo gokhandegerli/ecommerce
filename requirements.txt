@@ -4,8 +4,7 @@ Log in -                               GET http://localhost:8080/users/{{email}}
 Update email, name and password -      PUT http://localhost:8080/users/{{userId}}
 Delete account-                        DELETE http://localhost:8080/users/{{userId}}
 
-Customer should be able to add a product to Cart
-Customer should be able to remove a product from Cart
+
 Customer should be able to make an order
 
 ~Address~
@@ -16,10 +15,11 @@ Add an address to customer -           POST http://localhost:8080/addresses/{{ad
 Get the addresses of a customer -      GET http://localhost:8080/addresses/{{userId}}/get-user-address-list
 
 
-
-~Cart~
-
 ~CartProduct~
+
+AddCartProductToCart -                  POST http://localhost:8080/cart-products
+UpdateCardProductInCart -               PUT http://localhost:8080/cart-products/{{cartProductId}}
+
 
 ~Order~
 

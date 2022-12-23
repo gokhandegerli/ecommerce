@@ -13,16 +13,16 @@ public class CartProduct {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="PRIVATE_SEQ")
     private long id;
     @Column(nullable=false)
-    private long quantity;
+    private int quantity;
     @OneToOne
     private Product product;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     private Cart cart;
 
     public CartProduct() {
     }
 
-    public CartProduct(long id, long quantity, Product product, Cart cart) {
+    public CartProduct(long id, int quantity, Product product, Cart cart) {
         this.id = id;
         this.quantity = quantity;
         this.product = product;
@@ -37,11 +37,11 @@ public class CartProduct {
         this.id = id;
     }
 
-    public long getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(long quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 
@@ -77,7 +77,7 @@ public class CartProduct {
         CartProductDto dto = new CartProductDto();
         dto.setId(this.getId());
         dto.setQuantity(this.getQuantity());
-        dto.setCart(this.getCartDto());
+        //dto.setCart(this.getCartDto());
         dto.setProduct(this.getProductDto());
         return dto;
     }
