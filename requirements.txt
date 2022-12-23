@@ -1,18 +1,19 @@
 ~Customer~
-Customer should be able to sign up - POST http://localhost:8080/users/register
-Customer should be able to log in - GET http://localhost:8080/users/{{email}}/{{password}}
-Customer should be able to update email, name and password - PUT http://localhost:8080/users/{{userId}}
-Customer should be able to delete account-
+Sign up -                              POST http://localhost:8080/users/register
+Log in -                               GET http://localhost:8080/users/{{email}}/{{password}}
+Update email, name and password -      PUT http://localhost:8080/users/{{userId}}
+Delete account-                        DELETE http://localhost:8080/users/{{userId}}
 
 Customer should be able to add a product to Cart
 Customer should be able to remove a product from Cart
 Customer should be able to make an order
 
 ~Address~
-Add an address to customer -
-Get the addresses of a customer -
-Update an address of a customer -
-Remove an address from customer -
+create an address -                    POST http://localhost:8080/addresses
+Update an address -
+Delete an address -
+Add an address to customer -           POST http://localhost:8080/addresses/{{addressId}}/user/{{userId}}
+Get the addresses of a customer -      GET http://localhost:8080/addresses/{{userId}}/get-user-address-list
 
 
 
@@ -25,10 +26,16 @@ Remove an address from customer -
 ~OrderProduct~
 
 ~Product~
-Add a product -
+create a product -                      POST http://localhost:8080/products
 Get a product -
 Update a product -
 Delete a product -
+Add a product to a Category -           POST http://localhost:8080/products/{{productId}}/category/{{categoryId}}
+Get the products of a category -        GET http://localhost:8080/products/{{categoryId}}/get-category-product-list
+
 
 ~Category~
-
+create a category -                     POST http://localhost:8080/categories
+get a category -
+update a category -
+delete a category -

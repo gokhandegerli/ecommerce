@@ -16,7 +16,7 @@ public class WebOrder {
     private static final String MAP_CAT = "order";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="PRIVATE_SEQ")
     private long id;
 
     private OrderStatus status;

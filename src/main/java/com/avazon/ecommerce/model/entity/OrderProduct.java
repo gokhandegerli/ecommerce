@@ -10,7 +10,7 @@ public class OrderProduct {
 
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="PRIVATE_SEQ")
     private long id;
 
     private int quantity;

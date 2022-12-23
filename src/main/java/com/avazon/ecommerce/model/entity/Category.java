@@ -11,12 +11,9 @@ import lombok.Data;
 public class Category {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="PRIVATE_SEQ")
     private long id;
-
     private String name;
-
-
     public Category() {
     }
 

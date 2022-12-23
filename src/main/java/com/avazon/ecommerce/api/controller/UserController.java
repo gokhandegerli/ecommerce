@@ -2,10 +2,11 @@ package com.avazon.ecommerce.api.controller;
 
 import com.avazon.ecommerce.api.model.RegistrationBody;
 import com.avazon.ecommerce.api.model.UserUpdateBody;
-import com.avazon.ecommerce.exception.RegisterFieldsMissingException;
+import com.avazon.ecommerce.exception.FieldsMissingException;
 import com.avazon.ecommerce.exception.LoginFailException;
-import com.avazon.ecommerce.exception.UserAlreadyExistException;
-import com.avazon.ecommerce.exception.UserNotExistException;
+import com.avazon.ecommerce.exception.AlreadyExistException;
+import com.avazon.ecommerce.exception.NotExistException;
+import com.avazon.ecommerce.response.Meta;
 import com.avazon.ecommerce.response.UserResponse;
 import com.avazon.ecommerce.service.UserService;
 import jakarta.validation.Valid;
@@ -25,18 +26,18 @@ public class UserController {
     public UserResponse registerUser(@Valid @RequestBody RegistrationBody registrationBody) {
         try {
             return service.registerUser(registrationBody);
-        } catch (UserAlreadyExistException ex) {
+        } catch (AlreadyExistException ex) {
             ex.printStackTrace();
             UserResponse failResponse = new UserResponse();
-            failResponse.getMeta().setErrorCode(1001);
-            failResponse.getMeta().setErrorDescription("This user already registered! " +
+            failResponse.getMeta().setCode(1001);
+            failResponse.getMeta().setDescription("This user already registered! " +
                     "Please use a different e-mail!");
             return failResponse;
-        } catch (RegisterFieldsMissingException ex) {
+        } catch (FieldsMissingException ex) {
             ex.printStackTrace();
             UserResponse failResponse = new UserResponse();
-            failResponse.getMeta().setErrorCode(1002);
-            failResponse.getMeta().setErrorDescription("Please fill all fields!");
+            failResponse.getMeta().setCode(1002);
+            failResponse.getMeta().setDescription("Please fill all fields!");
             return failResponse;
         }
     }
@@ -49,8 +50,8 @@ public class UserController {
         } catch (LoginFailException ex) {
             ex.printStackTrace();
             UserResponse failResponse = new UserResponse();
-            failResponse.getMeta().setErrorCode(1003);
-            failResponse.getMeta().setErrorDescription("Please correctly fill the email and password fields!");
+            failResponse.getMeta().setCode(1003);
+            failResponse.getMeta().setDescription("Please correctly fill the email and password fields!");
             return failResponse;
         }
     }
@@ -60,12 +61,17 @@ public class UserController {
                                    @RequestBody UserUpdateBody userUpdateBody) {
         try {
             return service.updateUser(userId, userUpdateBody);
-        } catch (UserNotExistException ex) {
+        } catch (NotExistException ex) {
             ex.printStackTrace();
             UserResponse failResponse = new UserResponse();
-            failResponse.getMeta().setErrorCode(1004);
-            failResponse.getMeta().setErrorDescription("This user does not exist!");
+            failResponse.getMeta().setCode(1004);
+            failResponse.getMeta().setDescription("This user does not exist!");
             return failResponse;
         }
+    }
+
+    @DeleteMapping("{userId}")
+    public Meta deleteUser (@PathVariable (value="userId") long userId) {
+        return service.deleteUser(userId);
     }
 }

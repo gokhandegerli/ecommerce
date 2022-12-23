@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 public class CategoryResponse {
 
-    CategoryDto category;
+    CategoryDto category = new CategoryDto();
     Meta meta = new Meta();
 
 }

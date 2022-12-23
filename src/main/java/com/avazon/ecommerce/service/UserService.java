@@ -2,12 +2,13 @@ package com.avazon.ecommerce.service;
 
 import com.avazon.ecommerce.api.model.RegistrationBody;
 import com.avazon.ecommerce.api.model.UserUpdateBody;
-import com.avazon.ecommerce.exception.RegisterFieldsMissingException;
+import com.avazon.ecommerce.exception.FieldsMissingException;
 import com.avazon.ecommerce.exception.LoginFailException;
-import com.avazon.ecommerce.exception.UserAlreadyExistException;
-import com.avazon.ecommerce.exception.UserNotExistException;
+import com.avazon.ecommerce.exception.AlreadyExistException;
+import com.avazon.ecommerce.exception.NotExistException;
 import com.avazon.ecommerce.model.entity.LocalUser;
 import com.avazon.ecommerce.repository.UserRepository;
+import com.avazon.ecommerce.response.Meta;
 import com.avazon.ecommerce.response.UserResponse;
 import org.springframework.stereotype.Service;
 
@@ -22,15 +23,15 @@ public class UserService {
         this.repository = userRepository;
     }
 
-    public UserResponse registerUser(RegistrationBody registrationBody) throws UserAlreadyExistException,
-            RegisterFieldsMissingException {
+    public UserResponse registerUser(RegistrationBody registrationBody) throws AlreadyExistException,
+            FieldsMissingException {
         if (repository.findByEmail(registrationBody.getEmail()).isPresent()) {
-            throw new UserAlreadyExistException("Email is already used, please try a different e-mail!");
+            throw new AlreadyExistException("Email is already used, please try a different e-mail!");
         }
         if (registrationBody.getName() == null || registrationBody.getName().equals("") ||
                 registrationBody.getEmail() == null || registrationBody.getEmail().equals("") ||
                 registrationBody.getPassword() == null || registrationBody.getPassword().equals("")) {
-            throw new RegisterFieldsMissingException("All fields should have been filled, please check!!");
+            throw new FieldsMissingException("All fields should have been filled, please check!!");
         }
         LocalUser user = new LocalUser();
         user.setEmail(registrationBody.getEmail());
@@ -56,7 +57,7 @@ public class UserService {
     }
 
 
-    public UserResponse updateUser(long userId, UserUpdateBody userUpdateBody) throws UserNotExistException{
+    public UserResponse updateUser(long userId, UserUpdateBody userUpdateBody) throws NotExistException {
 
         Optional<LocalUser> opUser = repository.findById(userId);
 
@@ -80,8 +81,23 @@ public class UserService {
             return response;
         }
         else {
-            throw new UserNotExistException("This user does not exist in DB! Please check your data!");
+            throw new NotExistException("This user does not exist in DB! Please check your data!");
         }
     }
 
+    public Meta deleteUser(long userId) {
+
+        Optional<LocalUser> userToBeDeleted = repository.findById(userId);
+
+        if (userToBeDeleted.isPresent()) {
+            repository.deleteById(userId);
+            return new Meta();
+        } else {
+            return new Meta(1003,"User not exist!");
+        }
+    }
+
+    public Optional<LocalUser> getUserEntity(long userId) {
+        return repository.findById(userId);
+    }
 }

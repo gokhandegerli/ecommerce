@@ -15,8 +15,6 @@ public class UserDto {
     String password;
     String name;
     @JsonIgnore
-    List<AddressDto> addressList;
-    @JsonIgnore
     CartDto cart;
 
 }

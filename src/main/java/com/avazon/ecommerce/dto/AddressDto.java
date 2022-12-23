@@ -11,8 +11,7 @@ public class AddressDto {
     String city;
     String country;
     String postCode;
-    boolean active;
-    UserDto user;
+    UserDto user = new UserDto();
 
 
 }

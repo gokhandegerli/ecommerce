@@ -5,7 +5,14 @@ import lombok.Data;
 @Data
 public class Meta {
 
-    int errorCode =200;
-    String errorDescription ="Success";
+    int code =200;
+    String description ="Success";
 
+    public Meta(int code, String description) {
+        this.code = code;
+        this.description = description;
+    }
+
+    public Meta() {
+    }
 }

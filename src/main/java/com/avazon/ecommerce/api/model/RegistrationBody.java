@@ -11,8 +11,9 @@ public class RegistrationBody {
     @Email(message = "Fill a proper e-mail format")
     @NotNull
     String email;
-    @Pattern(regexp ="^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{6,}$", message = "Please fill a strong password," +
+    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{6,}$", message = "Please fill a strong password," +
             "Minimum six characters, at least one letter and one number!")
+    @NotNull
     String password;
     String name;
 

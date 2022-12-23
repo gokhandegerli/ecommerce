@@ -10,10 +10,10 @@ import java.util.List;
 @Entity
 public class Cart {
 
-    private final static String MAP_CAT = "cart";
+    private static final String MAP_CAT = "cart";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="PRIVATE_SEQ")
     private long id;
 
     @OneToMany(mappedBy = MAP_CAT, cascade = CascadeType.REMOVE, orphanRemoval = true)

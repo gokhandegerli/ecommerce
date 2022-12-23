@@ -1,17 +1,15 @@
 package com.avazon.ecommerce.model.entity;
 
 import com.avazon.ecommerce.dto.AddressDto;
-import com.avazon.ecommerce.dto.CartDto;
 import com.avazon.ecommerce.dto.UserDto;
 import jakarta.persistence.*;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
 
 @Entity
 public class Address {
 
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="PRIVATE_SEQ")
     private long id;
 
     @Column(nullable=false, length=512)
@@ -25,23 +23,18 @@ public class Address {
 
     private String postCode;
 
-    @Column(nullable=false)
-    private boolean active;
-
     @ManyToOne
     private LocalUser user;
 
     public Address() {
     }
 
-    public Address(long id, String line, String city, String country, String postCode,
-                   boolean active, LocalUser user) {
+    public Address(long id, String line, String city, String country, String postCode, LocalUser user) {
         this.id = id;
         this.line = line;
         this.city = city;
         this.country = country;
         this.postCode = postCode;
-        this.active = active;
         this.user = user;
     }
 
@@ -85,14 +78,6 @@ public class Address {
         this.postCode = postCode;
     }
 
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
     public LocalUser getUser() {
         return user;
     }
@@ -114,7 +99,6 @@ public class Address {
         dto.setCity(this.getCity());
         dto.setCountry(this.getCountry());
         dto.setPostCode(this.getPostCode());
-        dto.setActive(this.isActive());
         dto.setUser(this.getUserDto());
         return dto;
     }

@@ -13,7 +13,7 @@ public class LocalUser implements Serializable {
     private static final String MAP_CAT = "user";
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="PRIVATE_SEQ")
     private long id;
 
     @Column(nullable = false)
@@ -26,8 +26,8 @@ public class LocalUser implements Serializable {
     //The orphanRemoval is an ORM concept,it tells if the child is orphaned. it should also be
     // removed from the database. CascadeType.REMOVE (ALL consists of REMOVE) is a database level concept
     // and it tells if the parent is removed, all its related records in the child table should be removed.
-    @OneToMany(mappedBy = MAP_CAT, cascade = CascadeType.REMOVE, orphanRemoval = true)
-    List<Address> addressList = new ArrayList<>();
+    /*@OneToMany(mappedBy = MAP_CAT, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    List<Address> addressList = new ArrayList<>();*/
 
     @OneToOne(cascade = CascadeType.ALL)
     private Cart cart;
@@ -36,12 +36,11 @@ public class LocalUser implements Serializable {
     public LocalUser() {
     }
 
-    public LocalUser(long id, String email, String password, String name, List<Address> addressList, Cart cart) {
+    public LocalUser(long id, String email, String password, String name, Cart cart) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.name = name;
-        this.addressList = addressList;
         this.cart = cart;
     }
 
@@ -77,14 +76,6 @@ public class LocalUser implements Serializable {
         this.name = name;
     }
 
-    public List<Address> getAddressList() {
-        return addressList;
-    }
-
-    public void setAddressList(List<Address> addressList) {
-        this.addressList = addressList;
-    }
-
     public Cart getCart() {
         return cart;
     }
@@ -106,7 +97,6 @@ public class LocalUser implements Serializable {
         dto.setPassword(this.getPassword());
         dto.setName(this.getName());
         dto.setCart(this.getCartDto());
-        dto.setAddressList(this.getAddressList().stream().map(Address::toDto).toList());
         return dto;
     }
 
