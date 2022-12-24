@@ -18,7 +18,7 @@ public class OrderProduct {
     @OneToOne
     private Product product;
 
-    @ManyToOne
+    @ManyToOne (cascade = CascadeType.PERSIST)
     private WebOrder order;
 
     public OrderProduct() {
@@ -80,7 +80,7 @@ public class OrderProduct {
         dto.setId(this.getId());
         dto.setQuantity(this.getQuantity());
         dto.setProduct(this.getProductDto());
-        dto.setOrder(this.getOrderDto());
+        //dto.setOrder(this.getOrderDto());
         return dto;
     }
 }

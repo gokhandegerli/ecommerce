@@ -34,4 +34,15 @@ public class CartService {
     }
 
 
+    public Optional<Cart> getCartEntity(long cartId) {
+
+        return repository.findById(cartId);
+
+    }
+
+    public void deleteCart(long cartId) {
+
+        repository.deleteById(cartId);
+
+    }
 }

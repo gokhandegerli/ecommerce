@@ -58,7 +58,7 @@ public class ProductController {
         }
     }
 
-    @GetMapping ("{categoryId}/get-category-product-list")
+    @GetMapping ("get-category-product-list/{categoryId}")
     public List<ProductResponse> getCategoryProductList (@PathVariable(value = "categoryId") long categoryId) {
         return service.getCategoryProductList(categoryId);
     }

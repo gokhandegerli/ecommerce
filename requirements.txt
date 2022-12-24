@@ -1,29 +1,36 @@
-~Customer~
-Sign up -                              POST http://localhost:8080/users/register
-Log in -                               GET http://localhost:8080/users/{{email}}/{{password}}
-Update email, name and password -      PUT http://localhost:8080/users/{{userId}}
-Delete account-                        DELETE http://localhost:8080/users/{{userId}}
+~User~
+Sign up -                             POST http://localhost:8080/users/register
+Log in -                              GET http://localhost:8080/users/{{email}}/{{password}}
+Update email, name and password -     PUT http://localhost:8080/users/{{userId}}
+Delete account-                       DELETE http://localhost:8080/users/{{userId}}
 
-
-Customer should be able to make an order
 
 ~Address~
 create an address -                    POST http://localhost:8080/addresses
-Update an address -
-Delete an address -
-Add an address to customer -           POST http://localhost:8080/addresses/{{addressId}}/user/{{userId}}
-Get the addresses of a customer -      GET http://localhost:8080/addresses/{{userId}}/get-user-address-list
+update an address -                    PUT http://localhost:8080/addresses/{{addressId}}
+delete an address -                    DELETE http://localhost:8080/addresses/{{addressId}}
+add an address to customer -           POST http://localhost:8080/addresses/{{addressId}}/user/{{userId}}
+get the addresses of a customer -      GET http://localhost:8080/addresses/{{userId}}/get-user-address-list
 
+~Cart~
+get user cart -                        GET http://localhost:8080/carts/get-user-cart/{{userId}}
 
 ~CartProduct~
+addCartProductToCart -                 POST http://localhost:8080/cart-products
+updateCardProductInCart -              PUT http://localhost:8080/cart-products/{{cartProductId}}
 
-AddCartProductToCart -                  POST http://localhost:8080/cart-products
-UpdateCardProductInCart -               PUT http://localhost:8080/cart-products/{{cartProductId}}
+~Category~
+create a category -                    POST http://localhost:8080/categories
+get a category -
+update a category -
+delete a category -
 
 
 ~Order~
+checkout the cart (confirm an order) - POST http://localhost:8080/orders/checkout-cart/{{cartId}}
 
 ~OrderProduct~
+No end point required
 
 ~Product~
 create a product -                      POST http://localhost:8080/products
@@ -34,8 +41,4 @@ Add a product to a Category -           POST http://localhost:8080/products/{{pr
 Get the products of a category -        GET http://localhost:8080/products/{{categoryId}}/get-category-product-list
 
 
-~Category~
-create a category -                     POST http://localhost:8080/categories
-get a category -
-update a category -
-delete a category -
+

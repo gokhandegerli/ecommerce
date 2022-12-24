@@ -6,10 +6,15 @@ import com.avazon.ecommerce.exception.FieldsMissingException;
 import com.avazon.ecommerce.exception.LoginFailException;
 import com.avazon.ecommerce.exception.AlreadyExistException;
 import com.avazon.ecommerce.exception.NotExistException;
+import com.avazon.ecommerce.model.entity.Cart;
 import com.avazon.ecommerce.model.entity.LocalUser;
+import com.avazon.ecommerce.repository.AddressRepository;
+import com.avazon.ecommerce.repository.CartRepository;
 import com.avazon.ecommerce.repository.UserRepository;
+import com.avazon.ecommerce.repository.WebOrderRepository;
 import com.avazon.ecommerce.response.Meta;
 import com.avazon.ecommerce.response.UserResponse;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -18,9 +23,15 @@ import java.util.Optional;
 public class UserService {
 
     private UserRepository repository;
+    private CartRepository cartRepository;
+    private WebOrderRepository orderRepository;
+    private AddressRepository addressRepository;
 
-    public UserService(UserRepository userRepository) {
-        this.repository = userRepository;
+    public UserService(UserRepository repository, CartRepository cartRepository, WebOrderRepository orderRepository, AddressRepository addressRepository) {
+        this.repository = repository;
+        this.cartRepository = cartRepository;
+        this.orderRepository = orderRepository;
+        this.addressRepository = addressRepository;
     }
 
     public UserResponse registerUser(RegistrationBody registrationBody) throws AlreadyExistException,
@@ -39,6 +50,9 @@ public class UserService {
         user.setName(registrationBody.getName());
         UserResponse response = new UserResponse();
         response.setUser(repository.save(user).toDto());
+        Cart cart = new Cart();
+        cart.setUser(user);
+        cartRepository.save(cart);
         return response;
     }
 
@@ -50,6 +64,7 @@ public class UserService {
             response.getUser().setEmail(user.getEmail());
             response.getUser().setPassword(user.getPassword());
             response.getUser().setName(user.getName());
+            response.getUser().setId(user.getId());
             return response;
         } else {
             throw new LoginFailException("Missing email or password, please check your data");
@@ -79,21 +94,26 @@ public class UserService {
             }
             repository.save(user);
             return response;
-        }
-        else {
+        } else {
             throw new NotExistException("This user does not exist in DB! Please check your data!");
         }
     }
 
+    @Transactional
     public Meta deleteUser(long userId) {
+
 
         Optional<LocalUser> userToBeDeleted = repository.findById(userId);
 
         if (userToBeDeleted.isPresent()) {
+            cartRepository.deleteByUserId(userId);
+            orderRepository.deleteByUserId(userId);
+            addressRepository.deleteByUserId(userId);
+            //User silinince ilgili tüm address, cart ve order entityleri de siliniyor!
             repository.deleteById(userId);
             return new Meta();
         } else {
-            return new Meta(1003,"User not exist!");
+            return new Meta(1003, "User not exist!");
         }
     }
 

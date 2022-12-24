@@ -23,7 +23,7 @@ public class Address {
 
     private String postCode;
 
-    @ManyToOne
+    @OneToOne
     private LocalUser user;
 
     public Address() {

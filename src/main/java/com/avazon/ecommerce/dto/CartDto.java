@@ -4,6 +4,7 @@ import com.avazon.ecommerce.model.entity.CartProduct;
 import com.avazon.ecommerce.response.Meta;
 import lombok.Data;
 
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -11,8 +12,10 @@ import java.util.Set;
 public class CartDto {
 
     long id;
+    double totalPrice;
     UserDto user;
-    Set<CartProductDto> cartProducts;
+    Set<CartProductDto> cartProducts = new HashSet<>();
+
 
 
 }

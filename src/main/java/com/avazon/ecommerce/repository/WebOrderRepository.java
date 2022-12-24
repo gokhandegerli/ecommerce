@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface WebOrderRepository extends JpaRepository<WebOrder, Long> {
 
+    void deleteByUserId(long userId);
 }

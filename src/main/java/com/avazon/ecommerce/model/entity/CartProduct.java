@@ -16,7 +16,7 @@ public class CartProduct {
     private int quantity;
     @OneToOne
     private Product product;
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     private Cart cart;
 
     public CartProduct() {

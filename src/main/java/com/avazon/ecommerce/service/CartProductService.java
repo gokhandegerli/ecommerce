@@ -35,29 +35,28 @@ public class CartProductService {
 
         CartProduct cartProduct = new CartProduct();
         Product product = productService.getProductEntity(addCartProductToCartBody.getProductId()).get();
-        product.setQuantity(product.getQuantity()- addCartProductToCartBody.getQuantity());
+        product.setQuantity(product.getQuantity() - addCartProductToCartBody.getQuantity());
         cartProduct.setProduct(product);
         cartProduct.setQuantity(addCartProductToCartBody.getQuantity());
-        Optional<Cart> cart = cartService.getCartEntityWithUserId(addCartProductToCartBody.getUserId());
-        if (cart.isPresent()) { // halihazırda zaten bir sepet varsa
-            cart.get().getCartProducts().add(cartProduct);
-            cartProduct.setCart(cart.get());
-        } else { // sepete ilk bu ürün ekleniyorsa, sepet de oluşturulup user set ediliyor.
-            Cart newCart = new Cart();
-            newCart.setUser(userService.getUserEntity(addCartProductToCartBody.getUserId()).get());
-            newCart.getCartProducts().add(cartProduct);
-            cartProduct.setCart(newCart);
-        }
+        Cart cart = cartService.getCartEntityWithUserId(addCartProductToCartBody.getUserId()).get();
+        cart.setTotalPrice(cart.getTotalPrice() + (product.getPrice() * cartProduct.getQuantity()));
+        cart.getCartProducts().add(cartProduct);
+        cartProduct.setCart(cart);
+
         repository.save(cartProduct);
     }
 
-    public void updateCartProductInCart (long cartProductId, UpdateCartProductInCartBody updateCartProductInCartBody) {
+    public void updateCartProductInCart(long cartProductId, UpdateCartProductInCartBody updateCartProductInCartBody) {
 
+        int newQuantity = updateCartProductInCartBody.getNewQuantity();
         CartProduct cartProduct = repository.findById(cartProductId).get();
+        Cart cart = cartService.getCartEntity(cartProduct.getCart().getId()).get();
         cartProduct.getProduct().
-                setQuantity(cartProduct.getProduct().getQuantity()-(updateCartProductInCartBody.getNewQuantity()-cartProduct.getQuantity()));
-        cartProduct.setQuantity(updateCartProductInCartBody.getNewQuantity());
-        if (cartProduct.getQuantity()==0) {
+                setQuantity(cartProduct.getProduct().getQuantity() - (newQuantity - cartProduct.getQuantity()));
+        cart.setTotalPrice(cart.getTotalPrice()+(cartProduct.getProduct().getPrice() * (newQuantity-cartProduct.getQuantity())));
+        cartProduct.setQuantity(newQuantity);
+        if (cartProduct.getQuantity() == 0) {
+            cart.getCartProducts().remove(cartProduct);
             deleteCartProduct(cartProductId);
         } else {
             repository.save(cartProduct);

@@ -20,8 +20,8 @@ public class CartController {
     }
 
     @GetMapping("get-user-cart/{userId}")
-    public CartResponse getCartOfUser(@PathVariable(value = "userId") String userId) {
-        return service.getCartOfUser(Long.parseLong(userId));
+    public CartResponse getCartOfUser(@PathVariable(value = "userId") long userId) {
+        return service.getCartOfUser(userId);
     }
 
 

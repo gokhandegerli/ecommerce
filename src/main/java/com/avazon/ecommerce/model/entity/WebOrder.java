@@ -1,14 +1,15 @@
 package com.avazon.ecommerce.model.entity;
 
-import com.avazon.ecommerce.dto.CategoryDto;
 import com.avazon.ecommerce.dto.OrderDto;
 import com.avazon.ecommerce.dto.UserDto;
 import com.avazon.ecommerce.model.enums.OrderStatus;
 import jakarta.persistence.*;
-import org.springframework.data.domain.jaxb.SpringDataJaxb;
 
-import java.time.LocalDate;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 public class WebOrder {
@@ -19,29 +20,27 @@ public class WebOrder {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="PRIVATE_SEQ")
     private long id;
 
-    private OrderStatus status;
+    private OrderStatus status = OrderStatus.WAITING_CONFIRMATION;
 
-    private LocalDate createdDate;
-
-    private LocalDate deliveredDate;
+    private Date orderedDate;
 
     private double totalPrice;
 
     @OneToOne
     private LocalUser user;
 
-    @OneToMany(mappedBy = MAP_CAT, cascade = CascadeType.REMOVE, orphanRemoval = true)
-    private List<OrderProduct> orderedProducts;
+    @OneToMany(mappedBy = MAP_CAT,
+            cascade = CascadeType.ALL)
+    private Set<OrderProduct> orderedProducts = new HashSet<>();;
 
     public WebOrder() {
     }
 
-    public WebOrder(long id, OrderStatus status, LocalDate createdDate, LocalDate deliveredDate,
-                    double totalPrice, LocalUser user, List<OrderProduct> orderedProducts) {
+    public WebOrder(long id, OrderStatus status, Date orderedDate,
+                    double totalPrice, LocalUser user, Set<OrderProduct> orderedProducts) {
         this.id = id;
         this.status = status;
-        this.createdDate = createdDate;
-        this.deliveredDate = deliveredDate;
+        this.orderedDate = orderedDate;
         this.totalPrice = totalPrice;
         this.user = user;
         this.orderedProducts = orderedProducts;
@@ -63,20 +62,12 @@ public class WebOrder {
         this.status = status;
     }
 
-    public LocalDate getCreatedDate() {
-        return createdDate;
+    public Date getOrderedDate() {
+        return orderedDate;
     }
 
-    public void setCreatedDate(LocalDate createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public LocalDate getDeliveredDate() {
-        return deliveredDate;
-    }
-
-    public void setDeliveredDate(LocalDate deliveredDate) {
-        this.deliveredDate = deliveredDate;
+    public void setOrderedDate(Date orderedDate) {
+        this.orderedDate = orderedDate;
     }
 
     public double getTotalPrice() {
@@ -101,11 +92,11 @@ public class WebOrder {
         this.user = localUser;
     }
 
-    public List<OrderProduct> getOrderedProducts() {
+    public Set<OrderProduct> getOrderedProducts() {
         return orderedProducts;
     }
 
-    public void setOrderedProducts(List<OrderProduct> orderedProducts) {
+    public void setOrderedProducts(Set<OrderProduct> orderedProducts) {
         this.orderedProducts = orderedProducts;
     }
 
@@ -113,11 +104,10 @@ public class WebOrder {
         OrderDto dto = new OrderDto();
         dto.setId(this.getId());
         dto.setStatus(this.getStatus());
-        dto.setCreatedDate(this.getCreatedDate());
-        dto.setDeliveredDate(this.getDeliveredDate());
+        dto.setOrderedDate(this.getOrderedDate());
         dto.setTotalPrice(this.getTotalPrice());
         dto.setUser(this.getUserDto());
-        dto.setOrderedProducts(this.getOrderedProducts().stream().map(OrderProduct::toDto).toList());
+        dto.setOrderedProducts(this.getOrderedProducts().stream().map(OrderProduct::toDto).collect(Collectors.toSet()));
         return dto;
     }
 

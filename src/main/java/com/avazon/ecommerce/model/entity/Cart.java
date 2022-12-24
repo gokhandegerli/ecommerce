@@ -19,21 +19,24 @@ public class Cart implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="PRIVATE_SEQ")
     private long id;
 
+    private double totalPrice;
+
     @OneToOne
     private LocalUser user;
 
     @OneToMany(mappedBy = MAP_CAT,
-            orphanRemoval = true,
             cascade = CascadeType.ALL)
     Set<CartProduct> cartProducts = new HashSet<>();
+
 
     public Cart() {
     }
 
-    public Cart(long id, LocalUser user, Set<CartProduct> cartProducts) {
+    public Cart(long id, LocalUser user, Set<CartProduct> cartProducts, double totalPrice) {
         this.id = id;
         this.user = user;
         this.cartProducts = cartProducts;
+        this.totalPrice = totalPrice;
     }
 
     public long getId() {
@@ -66,11 +69,20 @@ public class Cart implements Serializable {
         this.cartProducts = cartProducts;
     }
 
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
     public CartDto toDto() {
         CartDto dto = new CartDto();
         dto.setId(this.getId());
         dto.setUser(this.getUserDto());
         dto.setCartProducts(this.getCartProducts().stream().map(CartProduct::toDto).collect(Collectors.toSet()));
+        dto.setTotalPrice(this.getTotalPrice());
         return dto;
     }
 
