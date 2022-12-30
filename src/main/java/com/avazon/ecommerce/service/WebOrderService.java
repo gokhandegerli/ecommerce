@@ -12,9 +12,11 @@ import com.avazon.ecommerce.repository.CartRepository;
 import com.avazon.ecommerce.repository.OrderProductRepository;
 import com.avazon.ecommerce.repository.WebOrderRepository;
 import com.avazon.ecommerce.response.WebOrderResponse;
+import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Optional;
@@ -42,7 +44,7 @@ public class WebOrderService {
 
         WebOrder order = new WebOrder();
         order.setStatus(OrderStatus.CONFIRMED);
-        order.setOrderedDate(new Date());
+        order.setOrderedDate(LocalDate.now());
         order.setTotalPrice(cart.getTotalPrice());
         order.setUser(cart.getUser());
         Set<OrderProduct> orderedProducts = new HashSet<>();

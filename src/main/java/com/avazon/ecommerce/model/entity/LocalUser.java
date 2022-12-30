@@ -41,6 +41,12 @@ public class LocalUser implements Serializable {
 
     }
 
+    public LocalUser(String email, String password, String name) {
+        this.email = email;
+        this.password = password;
+        this.name = name;
+    }
+
     public long getId() {
         return id;
     }

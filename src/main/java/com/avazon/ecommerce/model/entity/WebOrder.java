@@ -5,6 +5,7 @@ import com.avazon.ecommerce.dto.UserDto;
 import com.avazon.ecommerce.model.enums.OrderStatus;
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -22,7 +23,7 @@ public class WebOrder {
 
     private OrderStatus status = OrderStatus.WAITING_CONFIRMATION;
 
-    private Date orderedDate;
+    private LocalDate orderedDate;
 
     private double totalPrice;
 
@@ -36,9 +37,17 @@ public class WebOrder {
     public WebOrder() {
     }
 
-    public WebOrder(long id, OrderStatus status, Date orderedDate,
+    public WebOrder(long id, OrderStatus status, LocalDate orderedDate,
                     double totalPrice, LocalUser user, Set<OrderProduct> orderedProducts) {
         this.id = id;
+        this.status = status;
+        this.orderedDate = orderedDate;
+        this.totalPrice = totalPrice;
+        this.user = user;
+        this.orderedProducts = orderedProducts;
+    }
+
+    public WebOrder(OrderStatus status, LocalDate orderedDate, double totalPrice, LocalUser user, Set<OrderProduct> orderedProducts) {
         this.status = status;
         this.orderedDate = orderedDate;
         this.totalPrice = totalPrice;
@@ -62,11 +71,11 @@ public class WebOrder {
         this.status = status;
     }
 
-    public Date getOrderedDate() {
+    public LocalDate getOrderedDate() {
         return orderedDate;
     }
 
-    public void setOrderedDate(Date orderedDate) {
+    public void setOrderedDate(LocalDate orderedDate) {
         this.orderedDate = orderedDate;
     }
 

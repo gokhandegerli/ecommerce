@@ -17,4 +17,12 @@ public class RegistrationBody {
     String password;
     String name;
 
+    public RegistrationBody(String email, String password, String name) {
+        this.email = email;
+        this.password = password;
+        this.name = name;
+    }
+
+    public RegistrationBody() {
+    }
 }

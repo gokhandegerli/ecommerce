@@ -70,8 +70,8 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("{userId}")
+/*    @DeleteMapping("{userId}")
     public Meta deleteUser (@PathVariable (value="userId") long userId) {
         return service.deleteUser(userId);
-    }
+    }*/
 }
