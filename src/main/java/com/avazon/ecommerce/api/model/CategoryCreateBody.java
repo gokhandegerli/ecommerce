@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 public class CategoryCreateBody {
 
-    @NotNull
+    //@NotNull
     String name;
 
 }

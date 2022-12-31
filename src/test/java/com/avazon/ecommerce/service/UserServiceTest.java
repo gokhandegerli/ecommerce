@@ -2,7 +2,6 @@ package com.avazon.ecommerce.service;
 
 import com.avazon.ecommerce.api.model.RegistrationBody;
 import com.avazon.ecommerce.dto.UserDto;
-import com.avazon.ecommerce.exception.FieldsMissingException;
 import com.avazon.ecommerce.model.entity.LocalUser;
 import com.avazon.ecommerce.repository.AddressRepository;
 import com.avazon.ecommerce.repository.CartRepository;
@@ -12,7 +11,6 @@ import com.avazon.ecommerce.response.UserResponse;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -40,7 +38,7 @@ class UserServiceTest {
     AutoCloseable autoCloseable;
     LocalUser user;
 
-    RegistrationBody registrationBody;
+    RegistrationBody newReg;
 
 
     @BeforeEach
@@ -49,7 +47,7 @@ class UserServiceTest {
         autoCloseable = MockitoAnnotations.openMocks(this);
         userService = new UserService(userRepository, cartRepository, orderRepository, addressRepository);
         user = new LocalUser("user1@email.com", "password1", "user1");
-        //registrationBody = new RegistrationBody("", "password1", "user1");
+        newReg = new RegistrationBody("user1@email.com", "password1", "user1");
         UserDto dto = new UserDto("user1@email.com", "password1", "user1");
         UserResponse userResponse;
 
@@ -61,50 +59,193 @@ class UserServiceTest {
         autoCloseable.close();
     }
 
+
     @Test
-    void testCheckRegistrationBody_EmailNull() {
+    void testSetUserByRegistrationBody_AllMatch() {
 
-        //Throwable exception =
-        assertThrows(FieldsMissingException.class, new Executable() {
-            @Override
-            public void execute() throws Throwable {
-                RegistrationBody registrationBody1 = new RegistrationBody(null,"password1","name1");
-                userService.checkRegistrationBody(registrationBody1);
-            }
-        });
-            //assertEquals("All fields should have been filled, please check!!",exception.getMessage());
-        }
-
-
-        @Test
-        void testRegisterUser () {
-            //given
-/*        mock(RegistrationBody.class);
-        mock(UserResponse.class);
-        mock(UserService.class);
-        registrationBody = new RegistrationBody("user1@email.com", "password1", "user1");
-        UserResponse testResponse = new UserResponse(dto,new Meta(1001,"PASSED"));
+        //given
+        LocalUser setUser = new LocalUser();
 
         //when
-        UserResponse responseFromMethod = userService.registerUser(registrationBody);*/
+        setUser.setEmail(newReg.getEmail());
+        setUser.setPassword(newReg.getPassword());
+        setUser.setName(newReg.getName());
 
+        //then
+        assertThat(setUser.getName()).isEqualTo(user.getName());
+        assertThat(setUser.getEmail()).isEqualTo(user.getEmail());
+        assertThat(setUser.getPassword()).isEqualTo(user.getPassword());
 
-        }
-
-
-        @Test
-        void loginUser () {
-        }
-
-        @Test
-        void updateUser () {
-        }
-
-        @Test
-        void deleteUser () {
-        }
-
-        @Test
-        void getUserEntity () {
-        }
     }
+
+    @Test
+    void testSetUserByRegistrationBody_NameNotMatch() {
+
+        //given
+        LocalUser setUser = new LocalUser();
+        RegistrationBody newReg = new RegistrationBody("user1@email.com","password1","differentUser");
+
+        //when
+        setUser.setEmail(newReg.getEmail());
+        setUser.setPassword(newReg.getPassword());
+        setUser.setName(newReg.getName());
+
+        //then
+        assertThat(setUser.getName()).isNotEqualTo(user.getName());
+        assertThat(setUser.getEmail()).isEqualTo(user.getEmail());
+        assertThat(setUser.getPassword()).isEqualTo(user.getPassword());
+
+    }
+
+    @Test
+    void testSetUserByRegistrationBody_EmailNotMatch() {
+
+        //given
+        LocalUser setUser = new LocalUser();
+        RegistrationBody newReg = new RegistrationBody("differentEmail@email.com","password1","user1");
+
+        //when
+        setUser.setEmail(newReg.getEmail());
+        setUser.setPassword(newReg.getPassword());
+        setUser.setName(newReg.getName());
+
+        //then
+        assertThat(setUser.getName()).isEqualTo(user.getName());
+        assertThat(setUser.getEmail()).isNotEqualTo(user.getEmail());
+        assertThat(setUser.getPassword()).isEqualTo(user.getPassword());
+
+    }
+
+    @Test
+    void testSetUserByRegistrationBody_PasswordNotMatch() {
+
+        //given
+        LocalUser setUser = new LocalUser();
+        RegistrationBody newReg = new RegistrationBody("user1@email.com","differentPassword","user1");
+
+        //when
+        setUser.setEmail(newReg.getEmail());
+        setUser.setPassword(newReg.getPassword());
+        setUser.setName(newReg.getName());
+
+        //then
+        assertThat(setUser.getName()).isEqualTo(user.getName());
+        assertThat(setUser.getEmail()).isEqualTo(user.getEmail());
+        assertThat(setUser.getPassword()).isNotEqualTo(user.getPassword());
+
+    }
+
+    @Test
+    void testSetUserByRegistrationBody_EmailAndPasswordNotMatch() {
+
+        //given
+        LocalUser setUser = new LocalUser();
+        RegistrationBody newReg = new RegistrationBody("differentEmail@email.com","differentPassword","user1");
+
+        //when
+        setUser.setEmail(newReg.getEmail());
+        setUser.setPassword(newReg.getPassword());
+        setUser.setName(newReg.getName());
+
+        //then
+        assertThat(setUser.getName()).isEqualTo(user.getName());
+        assertThat(setUser.getEmail()).isNotEqualTo(user.getEmail());
+        assertThat(setUser.getPassword()).isNotEqualTo(user.getPassword());
+
+    }
+
+    @Test
+    void testSetUserByRegistrationBody_EmailAndNameNotMatch() {
+
+        //given
+        LocalUser setUser = new LocalUser();
+        RegistrationBody newReg = new RegistrationBody("differentEmail@email.com","password1","differentUser");
+
+        //when
+        setUser.setEmail(newReg.getEmail());
+        setUser.setPassword(newReg.getPassword());
+        setUser.setName(newReg.getName());
+
+        //then
+        assertThat(setUser.getName()).isNotEqualTo(user.getName());
+        assertThat(setUser.getEmail()).isNotEqualTo(user.getEmail());
+        assertThat(setUser.getPassword()).isEqualTo(user.getPassword());
+
+    }
+
+    @Test
+    void testSetUserByRegistrationBody_PasswordAndNameNotMatch() {
+
+        //given
+        LocalUser setUser = new LocalUser();
+        RegistrationBody newReg = new RegistrationBody("user1@email.com","differentPassword","differentUser");
+
+        //when
+        setUser.setEmail(newReg.getEmail());
+        setUser.setPassword(newReg.getPassword());
+        setUser.setName(newReg.getName());
+
+        //then
+        assertThat(setUser.getName()).isNotEqualTo(user.getName());
+        assertThat(setUser.getEmail()).isEqualTo(user.getEmail());
+        assertThat(setUser.getPassword()).isNotEqualTo(user.getPassword());
+
+    }
+
+    @Test
+    void testSetUserByRegistrationBody_AlldNotMatch() {
+
+        //given
+        LocalUser setUser = new LocalUser();
+        RegistrationBody newReg = new RegistrationBody("differentEmail@email.com","differentPassword","differentUser");
+
+        //when
+        setUser.setEmail(newReg.getEmail());
+        setUser.setPassword(newReg.getPassword());
+        setUser.setName(newReg.getName());
+
+        //then
+        assertThat(setUser.getName()).isNotEqualTo(user.getName());
+        assertThat(setUser.getEmail()).isNotEqualTo(user.getEmail());
+        assertThat(setUser.getPassword()).isNotEqualTo(user.getPassword());
+
+    }
+
+
+
+    @Test
+    void testReg() {
+
+/*        mock(RegistrationBody.class);
+        mock(UserResponse.class);
+        mock(UserDto.class);
+        mock(UserService.class);
+        mock(UserRepository.class);
+
+        UserResponse response = new UserResponse();
+        UserResponse responseFromMethod = userService.registerUser(registrationBody);
+        UserResponse testResponse = new UserResponse(dto, new Meta(1001, "PASSED"));
+        response.setUser(userRepository.save(user).toDto());
+        Cart cart = new Cart();
+        cart.setUser(user);
+        cartRepository.save(cart);
+        //return response;*/
+    }
+
+
+    @Test
+    void loginUser() {
+    }
+
+    @Test
+    void updateUser() {
+    }
+
+    @Test
+    void deleteUser() {
+    }
+
+    @Test
+    void getUserEntity() {
+    }
+}

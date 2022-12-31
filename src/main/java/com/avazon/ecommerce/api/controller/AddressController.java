@@ -2,6 +2,7 @@ package com.avazon.ecommerce.api.controller;
 
 import com.avazon.ecommerce.api.model.AddressCreateBody;
 import com.avazon.ecommerce.api.model.AddressUpdateBody;
+import com.avazon.ecommerce.api.model.RegistrationBody;
 import com.avazon.ecommerce.api.model.UserUpdateBody;
 import com.avazon.ecommerce.exception.FieldsMissingException;
 import com.avazon.ecommerce.exception.NotExistException;
@@ -34,6 +35,7 @@ public class AddressController {
 
 
         try {
+            checkAddressCreateBody(addressCreateBody);
             return service.createAddress(addressCreateBody);
         }
         catch (FieldsMissingException ex) {
@@ -81,6 +83,13 @@ public class AddressController {
     @DeleteMapping("{addressId}")
     public Meta deleteAddress (@PathVariable (value="addressId") long addressId) {
         return service.deleteAddress(addressId);
+    }
+
+    public void checkAddressCreateBody(AddressCreateBody addressCreateBody) throws FieldsMissingException {
+        if (addressCreateBody.getLine() == null || addressCreateBody.getLine().equals("") ||
+                addressCreateBody.getCity() == null || addressCreateBody.getCity().equals("")) {
+            throw new FieldsMissingException("Address Line and City should have been filled, please check!!");
+        }
     }
 
 

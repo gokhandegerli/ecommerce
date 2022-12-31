@@ -35,9 +35,6 @@ public class ProductService {
         if (repository.findByName(productCreateBody.getName()).isPresent()) {
             throw new AlreadyExistException("Product exist, use a different name!");
         }
-        if (productCreateBody.getName() == null || productCreateBody.getName().equals("") ) {
-            throw new FieldsMissingException("All fields should have been filled, please check!!");
-        }
         Product product = new Product();
         product.setName(productCreateBody.getName());
         product.setDescription(productCreateBody.getDescription());

@@ -39,7 +39,6 @@ public class UserService {
         if (repository.findByEmail(registrationBody.getEmail()).isPresent()) {
             throw new AlreadyExistException("Email is already used, please try a different e-mail!");
         }
-        checkRegistrationBody(registrationBody);
         LocalUser user = new LocalUser();
         user.setEmail(registrationBody.getEmail());
         user.setPassword(registrationBody.getPassword());
@@ -117,13 +116,6 @@ public class UserService {
         return repository.findById(userId);
     }
 
-    public boolean checkRegistrationBody(RegistrationBody registrationBody) throws FieldsMissingException {
-        if (registrationBody.getName() == null || registrationBody.getName().equals("") ||
-                registrationBody.getEmail() == null || registrationBody.getEmail().equals("") ||
-                registrationBody.getPassword() == null || registrationBody.getPassword().equals("")) {
-            throw new FieldsMissingException("All fields should have been filled, please check!!");
-        }
-        return true;
-    }
+
 
 }

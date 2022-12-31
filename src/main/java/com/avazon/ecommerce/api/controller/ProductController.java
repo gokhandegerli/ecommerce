@@ -26,6 +26,7 @@ public class ProductController {
     @PostMapping()
     public ProductResponse createProduct(@RequestBody ProductCreateBody productCreateBody) {
         try {
+            checkProductCreateBody(productCreateBody);
             return service.createProduct(productCreateBody);
         } catch (AlreadyExistException ex) {
             ex.printStackTrace();
@@ -61,6 +62,11 @@ public class ProductController {
     @GetMapping ("get-category-product-list/{categoryId}")
     public List<ProductResponse> getCategoryProductList (@PathVariable(value = "categoryId") long categoryId) {
         return service.getCategoryProductList(categoryId);
+    }
+    public void checkProductCreateBody(ProductCreateBody productCreateBody) throws FieldsMissingException {
+        if (productCreateBody.getName() == null || productCreateBody.getName().equals("") ) {
+            throw new FieldsMissingException("Name field should have been filled, please check!!");
+        }
     }
 
 }

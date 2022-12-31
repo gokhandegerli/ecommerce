@@ -6,9 +6,9 @@ import lombok.Data;
 @Data
 public class AddressCreateBody {
 
-    @NotNull
+    //@NotNull
     String line;
-    @NotNull
+    //@NotNull
     String city;
     String country;
     String postCode;

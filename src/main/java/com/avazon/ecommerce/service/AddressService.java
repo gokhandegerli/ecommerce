@@ -31,10 +31,6 @@ public class AddressService {
 
     public AddressResponse createAddress(AddressCreateBody addressCreateBody) throws FieldsMissingException {
 
-        if (addressCreateBody.getLine() == null || addressCreateBody.getLine().equals("") ||
-                addressCreateBody.getCity() == null || addressCreateBody.getCity().equals("")) {
-            throw new FieldsMissingException("Address Line and City should have been filled, please check!!");
-        }
         Address address = new Address();
         address.setLine(addressCreateBody.getLine());
         address.setCity(addressCreateBody.getCity());

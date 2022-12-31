@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 public class ProductCreateBody {
 
-    @NotNull
+    //@NotNull
     String name;
     String description;
     String picture;

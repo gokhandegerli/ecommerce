@@ -27,9 +27,6 @@ public class CategoryService {
         if (repository.findByName(categoryCreateBody.getName()).isPresent()) {
             throw new AlreadyExistException("Category exist, use a different name!");
         }
-        if (categoryCreateBody.getName() == null || categoryCreateBody.getName().equals("") ) {
-            throw new FieldsMissingException("All fields should have been filled, please check!!");
-        }
         Category category = new Category();
         category.setName(categoryCreateBody.getName());
         CategoryResponse response = new CategoryResponse();

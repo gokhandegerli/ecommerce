@@ -25,6 +25,7 @@ public class UserController {
     @PostMapping("/register")
     public UserResponse registerUser(@Valid @RequestBody RegistrationBody registrationBody) {
         try {
+            checkRegistrationBody(registrationBody);
             return service.registerUser(registrationBody);
         } catch (AlreadyExistException ex) {
             ex.printStackTrace();
@@ -74,4 +75,13 @@ public class UserController {
     public Meta deleteUser (@PathVariable (value="userId") long userId) {
         return service.deleteUser(userId);
     }*/
+
+    public void checkRegistrationBody(RegistrationBody registrationBody) throws FieldsMissingException {
+        if (registrationBody.getName() == null || registrationBody.getName().equals("") ||
+                registrationBody.getEmail() == null || registrationBody.getEmail().equals("") ||
+                registrationBody.getPassword() == null || registrationBody.getPassword().equals("")) {
+            throw new FieldsMissingException("All fields should have been filled, please check!!");
+        }
+    }
+
 }
