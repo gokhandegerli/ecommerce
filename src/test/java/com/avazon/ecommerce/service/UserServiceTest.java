@@ -15,11 +15,11 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import java.util.Optional;
 
-import static org.mockito.Mockito.mock;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
+import static org.mockito.Mockito.when;
 
 @DataJpaTest
 class UserServiceTest {
@@ -37,7 +37,6 @@ class UserServiceTest {
     private UserService userService;
     AutoCloseable autoCloseable;
     LocalUser user;
-
     RegistrationBody newReg;
 
 
@@ -46,7 +45,7 @@ class UserServiceTest {
 
         autoCloseable = MockitoAnnotations.openMocks(this);
         userService = new UserService(userRepository, cartRepository, orderRepository, addressRepository);
-        user = new LocalUser("user1@email.com", "password1", "user1");
+        user = new LocalUser(1L,"user1@email.com", "password1", "user1");
         newReg = new RegistrationBody("user1@email.com", "password1", "user1");
         UserDto dto = new UserDto("user1@email.com", "password1", "user1");
         UserResponse userResponse;
@@ -246,6 +245,27 @@ class UserServiceTest {
     }
 
     @Test
-    void getUserEntity() {
+    void testGetUserEntity_Found() {
+
+        //mock(LocalUser.class);
+        //mock(UserRepository.class);
+        LocalUser userTest = new LocalUser();
+
+        when(userRepository.findById(1L)).thenReturn(Optional.ofNullable(userTest));
+        assertThat(userService.getUserEntity(1L).get().getEmail())
+                .isEqualTo(userTest.getEmail());
     }
+
+    @Test
+    void testGetUserEntity_NotFound() {
+
+        LocalUser userTest = new LocalUser();
+
+        when(userRepository.findById(1L))
+                .thenReturn(Optional.ofNullable(userTest));
+
+        assertThat(userService.getUserEntity(1L).get())
+                .isNotEqualTo(null);
+    }
+
 }

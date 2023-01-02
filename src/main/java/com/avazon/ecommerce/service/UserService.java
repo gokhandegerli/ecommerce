@@ -113,6 +113,7 @@ public class UserService {
     }
 
     public Optional<LocalUser> getUserEntity(long userId) {
+
         return repository.findById(userId);
     }
 
